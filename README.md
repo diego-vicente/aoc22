@@ -11,3 +11,8 @@ nix develop
 go build .
 ./aoc -day={1-25}
 ```
+
+
+[1]: https://adventofcode.com/2022
+[2]: https://go.dev
+[3]: https://nixos.org
