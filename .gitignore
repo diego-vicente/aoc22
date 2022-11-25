@@ -48,3 +48,6 @@ go.work
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/go,direnv,visualstudiocode
+
+# Ignore the real input folder
+/assets/input/
