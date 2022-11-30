@@ -26,6 +26,7 @@
               delve
               # go-outline
               # gopkgs
+              hyperfine
             ];
 
             # shellHook = ''
