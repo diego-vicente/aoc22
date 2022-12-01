@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+
+	"github.com/diego-vicente/aoc22/aoc/day01"
 )
 
 func main() {
@@ -15,8 +17,8 @@ func main() {
 	fmt.Println("You have asked to solve day:", *day)
 
 	switch *day {
-	// case 1:
-	// 	aoc.SolveDay01(*path)
+	case 1:
+		day01.Solve(*path)
 	default:
 		fmt.Printf("Day %d has not been implemented yet.", day)
 	}
