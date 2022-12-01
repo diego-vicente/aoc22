@@ -42,5 +42,7 @@ func readInput(path string) []Inventory {
 
 	}
 
+	input = append(input, current)
+
 	return input
 }
