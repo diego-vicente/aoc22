@@ -12,9 +12,10 @@ func totalCalories(inv Inventory) int {
 }
 
 // Return the maximum number of calories carried by a single elf.
-func solveFirstPart(input []Inventory) int {
+func solveFirstPart(path string) int {
 	var result int
 
+	input := readInput(path)
 	for _, inventory := range input {
 		if total := totalCalories(inventory); total > result {
 			result = total

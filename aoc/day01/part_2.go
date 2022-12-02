@@ -17,10 +17,11 @@ func updateRanking(ranking *ranking, newValue int) {
 }
 
 // Return the maximum number of calories carried by a the top-3 elves.
-func solveSecondPart(input []Inventory) int {
+func solveSecondPart(path string) int {
 	var result int
 	top := ranking{0, 0, 0}
 
+	input := readInput(path)
 	for _, inventory := range input {
 		updateRanking(&top, totalCalories(inventory))
 	}
