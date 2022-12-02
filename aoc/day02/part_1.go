@@ -1,5 +1,6 @@
 package day02
 
+// Compute the points associated with a move
 func (shape HandShape) Points() int {
 	switch shape {
 	case Rock:
@@ -13,42 +14,56 @@ func (shape HandShape) Points() int {
 	}
 }
 
+// Compute the points associated with a result
+func (result Result) Points() int {
+	// Count the match result points
+	switch result {
+	case Defeat:
+		return 0
+	case Draw:
+		return 3
+	case Victory:
+		return 6
+	default:
+		panic("Impossible result")
+	}
+}
+
+// Compute the result of a match for the player
 func (match Match) PlayerResult() Result {
 	diff := (match.Player.Points() - match.Opponent.Points() + 3) % 3
 
 	switch diff {
+	case 0:
+		return Draw
 	case 1:
 		return Victory
 	case 2:
 		return Defeat
 	default:
-		return Draw
+		panic("Impossible case")
 	}
 }
 
-func (match Match) playerScore() int {
+// Compute the score for the player
+func (match Match) PlayerScore() int {
 	// Count the player movement points
 	points := match.Player.Points()
 
-	// Count the match result points
-	switch match.PlayerResult() {
-	case Draw:
-		points += 3
-	case Victory:
-		points += 6
-	}
+	// Count the result points
+	points += match.PlayerResult().Points()
 
 	return points
 }
 
-// Return the maximum number of calories carried by a single elf.
+// Return the total number of points for the player
 func solveFirstPart(path string) int {
 	var result int
 
-	input := readInput(path)
+	input := readFirstPartInput(path)
 
 	for _, match := range input {
-		result += match.playerScore()
+		result += match.PlayerScore()
 	}
 
 	return result

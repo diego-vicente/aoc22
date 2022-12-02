@@ -64,7 +64,7 @@ func parseMatch(line string) Match {
 }
 
 // Read each line of the input as a match definition
-func readInput(path string) []Match {
+func readFirstPartInput(path string) []Match {
 	var input []Match
 
 	file, err := os.Open(path)
@@ -77,6 +77,63 @@ func readInput(path string) []Match {
 	for scanner.Scan() {
 		line := scanner.Text()
 		input = append(input, parseMatch(line))
+	}
+
+	return input
+}
+
+// A Match is defined by a player's move and an opponent's move
+type RiggedMatch struct {
+	Opponent HandShape
+	Expected Result
+}
+
+// Parse a line as a match definition
+func parseRiggedMatch(line string) RiggedMatch {
+	var opponent HandShape
+	var expected Result
+
+	values := strings.Split(line, " ")
+
+	switch values[0] {
+	case "A":
+		opponent = Rock
+	case "B":
+		opponent = Paper
+	case "C":
+		opponent = Scissors
+	default:
+		panic(fmt.Sprintf("Unknown move %s", values[0]))
+	}
+
+	switch values[1] {
+	case "X":
+		expected = Defeat
+	case "Y":
+		expected = Draw
+	case "Z":
+		expected = Victory
+	default:
+		panic(fmt.Sprintf("Unknown result %s", values[0]))
+	}
+
+	return RiggedMatch{Opponent: opponent, Expected: expected}
+}
+
+// Read each line of the input as a match definition
+func readSecondPartInput(path string) []RiggedMatch {
+	var input []RiggedMatch
+
+	file, err := os.Open(path)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		input = append(input, parseRiggedMatch(line))
 	}
 
 	return input
