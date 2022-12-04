@@ -7,6 +7,7 @@ import (
 	"github.com/diego-vicente/aoc22/aoc/day01"
 	"github.com/diego-vicente/aoc22/aoc/day02"
 	"github.com/diego-vicente/aoc22/aoc/day03"
+	"github.com/diego-vicente/aoc22/aoc/day04"
 )
 
 func main() {
@@ -25,7 +26,9 @@ func main() {
 		day02.Solve(*path)
 	case 3:
 		day03.Solve(*path)
+	case 4:
+		day04.Solve(*path)
 	default:
-		fmt.Printf("Day %d has not been implemented yet.", day)
+		fmt.Printf("Day %d has not been implemented yet.\n", *day)
 	}
 }
