@@ -31,6 +31,11 @@ func (set IntSet) Values() []int {
 	return values
 }
 
+// Return the number of elements in the IntSet
+func (set IntSet) Size() int {
+	return len(set.rel)
+}
+
 // Return true if the IntSet contains the element
 func (set IntSet) Contains(elem int) bool {
 	_, ok := set.rel[elem]
