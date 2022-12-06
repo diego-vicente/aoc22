@@ -50,3 +50,48 @@ func TestHeaderIndex4(t *testing.T) {
 		t.Fatalf(`Expected %d, got %d instead`, want, result)
 	}
 }
+
+func TestSecondPart(t *testing.T) {
+	path := ASSETS_DIR + "example.txt"
+	want := 19
+
+	if result := solveSecondPart(path); result != want {
+		t.Fatalf(`Day 06-02 test returned %d, got %d instead`, want, result)
+	}
+}
+
+func TestHeaderIndex5(t *testing.T) {
+	input := "bvwbjplbgvbhsrlpgdmjqwftvncz"
+	want := 23
+
+	if result := headerIndex(input, 14); result != want {
+		t.Fatalf(`Expected %d, got %d instead`, want, result)
+	}
+}
+
+func TestHeaderIndex6(t *testing.T) {
+	input := "nppdvjthqldpwncqszvftbrmjlhg"
+	want := 23
+
+	if result := headerIndex(input, 14); result != want {
+		t.Fatalf(`Expected %d, got %d instead`, want, result)
+	}
+}
+
+func TestHeaderIndex7(t *testing.T) {
+	input := "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"
+	want := 29
+
+	if result := headerIndex(input, 14); result != want {
+		t.Fatalf(`Expected %d, got %d instead`, want, result)
+	}
+}
+
+func TestHeaderIndex8(t *testing.T) {
+	input := "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"
+	want := 26
+
+	if result := headerIndex(input, 14); result != want {
+		t.Fatalf(`Expected %d, got %d instead`, want, result)
+	}
+}
