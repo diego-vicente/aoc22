@@ -8,7 +8,7 @@ func solveSecondPart(path string) int {
 
 	input := readInput(path)
 
-	var currentGroup dsa.IntSet
+	var currentGroup dsa.Set[int]
 	groupCounter := 0
 
 	for _, rucksack := range input {

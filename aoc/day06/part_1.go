@@ -6,7 +6,7 @@ import (
 
 // Check if the last seen characters are the header
 func isHeader(seen dsa.IntQueue, length int) bool {
-	set := dsa.NewIntSet()
+	set := dsa.NewSet[int]()
 	for _, elem := range seen.Values() {
 		set.Add(elem)
 	}

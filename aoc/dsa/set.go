@@ -1,28 +1,28 @@
 package dsa
 
-// A set of integers is represented by a map of integers
-type IntSet struct {
-	rel map[int]bool
+// A set is represented by a map of its values
+type Set[T comparable] struct {
+	rel map[T]bool
 }
 
-// Create a new IntSet and initialize all fields
-func NewIntSet() IntSet {
-	return IntSet{map[int]bool{}}
+// Create a new Set and initialize all fields
+func NewSet[T comparable]() Set[T] {
+	return Set[T]{map[T]bool{}}
 }
 
-// Add a new element to the IntSet
-func (set IntSet) Add(elem int) {
+// Add a new element to the Set
+func (set Set[T]) Add(elem T) {
 	set.rel[elem] = true
 }
 
-// Remove an element from an IntSet
-func (set IntSet) Remove(elem int) {
+// Remove an element from an Set
+func (set Set[T]) Remove(elem T) {
 	delete(set.rel, elem)
 }
 
-// Return a slice of the values fo an IntSet
-func (set IntSet) Values() []int {
-	var values []int
+// Return a slice of the values fo an Set
+func (set Set[T]) Values() []T {
+	var values []T
 
 	for value := range set.rel {
 		values = append(values, value)
@@ -31,20 +31,20 @@ func (set IntSet) Values() []int {
 	return values
 }
 
-// Return the number of elements in the IntSet
-func (set IntSet) Size() int {
+// Return the number of elements in the Set
+func (set Set[T]) Size() int {
 	return len(set.rel)
 }
 
-// Return true if the IntSet contains the element
-func (set IntSet) Contains(elem int) bool {
+// Return true if the Set contains the element
+func (set Set[T]) Contains(elem T) bool {
 	_, ok := set.rel[elem]
 	return ok
 }
 
-// Return the union of two given IntSets
-func (set IntSet) Union(other IntSet) IntSet {
-	union := NewIntSet()
+// Return the union of two given Sets
+func (set Set[T]) Union(other Set[T]) Set[T] {
+	union := NewSet[T]()
 
 	for elem := range set.rel {
 		union.Add(elem)
@@ -57,9 +57,9 @@ func (set IntSet) Union(other IntSet) IntSet {
 	return union
 }
 
-// Return the intersection of two given IntSets
-func (set IntSet) Intersection(other IntSet) IntSet {
-	intersect := NewIntSet()
+// Return the intersection of two given Sets
+func (set Set[T]) Intersection(other Set[T]) Set[T] {
+	intersect := NewSet[T]()
 
 	for elem := range set.rel {
 		if other.Contains(elem) {

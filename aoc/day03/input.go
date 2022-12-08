@@ -8,8 +8,8 @@ import (
 )
 
 type Rucksack struct {
-	First  dsa.IntSet
-	Second dsa.IntSet
+	First  dsa.Set[int]
+	Second dsa.Set[int]
 }
 
 // Map each item to their priority
@@ -23,7 +23,7 @@ func Priority(char rune) int {
 
 // Parse a line as a Rucksack definition
 func parseRucksack(line string) Rucksack {
-	rucksack := Rucksack{dsa.NewIntSet(), dsa.NewIntSet()}
+	rucksack := Rucksack{dsa.NewSet[int](), dsa.NewSet[int]()}
 
 	size := len(line) / 2
 
