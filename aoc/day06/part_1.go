@@ -5,7 +5,7 @@ import (
 )
 
 // Check if the last seen characters are the header
-func isHeader(seen dsa.IntQueue, length int) bool {
+func isHeader(seen dsa.Queue[int], length int) bool {
 	set := dsa.NewSet[int]()
 	for _, elem := range seen.Values() {
 		set.Add(elem)
@@ -16,7 +16,7 @@ func isHeader(seen dsa.IntQueue, length int) bool {
 
 // Return the index where the header of the message ends
 func headerIndex(msg string, length int) int {
-	seen := dsa.NewIntQueue()
+	seen := dsa.NewQueue[int]()
 
 	for index, char := range msg {
 		if seen.Size() == length {
