@@ -11,7 +11,7 @@ import (
 )
 
 // The crate positions are a map of stacks
-type CrateStacks = map[int](*dsa.IntStack)
+type CrateStacks = map[int](*dsa.Stack[int])
 
 // Each movement has a quantity, an origin and a destination
 type Movement struct {
@@ -26,7 +26,7 @@ func parseStacks(lines []string) CrateStacks {
 	stacks := CrateStacks{}
 	numStacks := len(strings.Split(lines[len(lines)-1], "   "))
 	for i := 1; i <= numStacks; i++ {
-		stack := dsa.NewIntStack()
+		stack := dsa.NewStack[int]()
 		stacks[i] = &stack
 	}
 
