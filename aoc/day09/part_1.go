@@ -12,9 +12,22 @@ type Point struct {
 
 // A rope is defined by its head's and tail's positions
 type Rope struct {
-	Head        Point
-	Tail        Point
+	Knots       []Point
 	tailVisited dsa.Set[Point]
+}
+
+// Create a Rope with a given number of knots
+func NewRope(nKnots int) Rope {
+	var knots []Point
+
+	for i := 0; i < nKnots; i++ {
+		knots = append(knots, Point{0, 0})
+	}
+
+	return Rope{
+		Knots:       knots,
+		tailVisited: dsa.NewSet[Point](),
+	}
 }
 
 // Compute the final position of moving the point to any position
@@ -33,22 +46,56 @@ func (point Point) Move(direction Direction) Point {
 	}
 }
 
-// Check if a Rope is in a stretched position
-func (rope Rope) IsStretched() bool {
-	xDelta := rope.Head.X - rope.Tail.X
-	yDelta := rope.Head.Y - rope.Tail.Y
+// Check if two knots are too far apar
+func areStretched(first, tail Point) bool {
+	xDelta := first.X - tail.X
+	yDelta := first.Y - tail.Y
 	return !(xDelta <= 1 && xDelta >= -1 && yDelta <= 1 && yDelta >= -1)
 }
 
-// Move a rope according to one Movement, and update its tail
+// Ensure that all deltas are in the [-1, 1] interval
+func normalizeDeltas(xDelta, yDelta int) (int, int) {
+	if xDelta > 0 {
+		xDelta /= xDelta
+	} else if xDelta < 0 {
+		xDelta /= -xDelta
+	}
+
+	if yDelta > 0 {
+		yDelta /= yDelta
+	} else if yDelta < 0 {
+		yDelta /= -yDelta
+	}
+
+	return xDelta, yDelta
+}
+
+// Move the tail to the next position defined by its head
+func compress(first, tail Point) Point {
+	xDelta, yDelta := normalizeDeltas(first.X-tail.X, first.Y-tail.Y)
+
+	return Point{
+		X: tail.X + xDelta,
+		Y: tail.Y + yDelta,
+	}
+}
+
+// Move a rope according to one Movement, and update its knots
 func (rope *Rope) Move(movement Movement) {
 	for i := 0; i < movement.Times; i++ {
-		origin := rope.Head
-		rope.Head = rope.Head.Move(movement.To)
-		if rope.IsStretched() {
-			rope.Tail = origin
+		// Move the head of the rope
+		rope.Knots[0] = rope.Knots[0].Move(movement.To)
+
+		for i := 1; i < len(rope.Knots); i++ {
+			if areStretched(rope.Knots[i-1], rope.Knots[i]) {
+				rope.Knots[i] = compress(rope.Knots[i-1], rope.Knots[i])
+			} else {
+				// If there is no update, stop checking the rope
+				break
+			}
 		}
-		rope.tailVisited.Add(rope.Tail)
+
+		rope.tailVisited.Add(rope.Knots[len(rope.Knots)-1])
 	}
 }
 
@@ -56,12 +103,7 @@ func (rope *Rope) Move(movement Movement) {
 func solveFirstPart(path string) int {
 	input := readInput(path)
 
-	rope := Rope{
-		Head:        Point{0, 0},
-		Tail:        Point{0, 0},
-		tailVisited: dsa.NewSet[Point](),
-	}
-
+	rope := NewRope(2)
 	for _, movement := range input {
 		rope.Move(movement)
 	}
