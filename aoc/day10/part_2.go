@@ -17,9 +17,9 @@ type CRT struct {
 func (crt *CRT) Display() {
 	for i := 0; i < crt.Width; i++ {
 		if crt.Pixels.Contains(i) {
-			fmt.Print("#")
+			fmt.Print("█")
 		} else {
-			fmt.Print(".")
+			fmt.Print(" ")
 		}
 	}
 	fmt.Print("\n")
