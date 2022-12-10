@@ -10,6 +10,17 @@ func NewSet[T comparable]() Set[T] {
 	return Set[T]{map[T]bool{}}
 }
 
+// Create a new Set from a slice of values
+func NewSetFrom[T comparable](values []T) Set[T] {
+	set := Set[T]{map[T]bool{}}
+
+	for _, elem := range values {
+		set.Add(elem)
+	}
+
+	return set
+}
+
 // Add a new element to the Set
 func (set Set[T]) Add(elem T) {
 	set.rel[elem] = true
