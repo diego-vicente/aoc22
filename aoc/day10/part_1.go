@@ -44,7 +44,7 @@ func (cpu *CPU) Run(instructions []Executable, checkpoints dsa.Set[int]) int {
 // Solve the first part by checking the signal strength
 func solveFirstPart(path string) int {
 	input := readInput(path)
-	checkpoints := dsa.NewSetFrom[int]([]int{20, 60, 100, 140, 180, 220})
+	checkpoints := dsa.NewSetFrom([]int{20, 60, 100, 140, 180, 220})
 	cpu := CPU{Register: 1, CycleCount: 1}
 	return cpu.Run(input, checkpoints)
 }
