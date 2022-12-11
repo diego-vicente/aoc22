@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+// A control function receives an integer and returns it in reasonable bounds
+type ControlFunc = func(int) int
+
 // Apply an operation to an integer
 func apply(old int, operation string) int {
 	var value int
@@ -36,11 +39,12 @@ func apply(old int, operation string) int {
 }
 
 // Run all rounds for the first part
-func performRounds(monkeys [](*Monkey), rounds int) {
+func performRounds(monkeys [](*Monkey), rounds int, control ControlFunc) {
 	for round := 1; round <= rounds; round++ {
 		for _, monkey := range monkeys {
 			for _, item := range monkey.Items {
-				item.Worry = apply(item.Worry, monkey.Operation) / 3
+				item.Worry = apply(item.Worry, monkey.Operation)
+				item.Worry = control(item.Worry)
 
 				if item.Worry%monkey.DivisibleBy == 0 {
 					monkeys[monkey.IfTrue].Items = append(
@@ -62,13 +66,18 @@ func performRounds(monkeys [](*Monkey), rounds int) {
 	}
 }
 
-func solveFirstPart(path string) int {
-	monkeys := readInput(path)
-	performRounds(monkeys, 20)
-
+// Compute the product of the two busiest monkeys inspections
+func monkeyBusiness(monkeys [](*Monkey)) int {
 	sort.Slice(monkeys, func(i, j int) bool {
 		return monkeys[i].Inspected > monkeys[j].Inspected
 	})
 
 	return monkeys[0].Inspected * monkeys[1].Inspected
+}
+
+// Solve the first part using 20 rounds and dividing by 3
+func solveFirstPart(path string) int {
+	monkeys := readInput(path)
+	performRounds(monkeys, 20, func(w int) int { return w / 3 })
+	return monkeyBusiness(monkeys)
 }
