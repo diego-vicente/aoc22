@@ -14,3 +14,12 @@ func TestFirstPart(t *testing.T) {
 		t.Fatalf(`Day 12-01 test returned %d, got %d instead`, want, result)
 	}
 }
+
+func TestSecondPart(t *testing.T) {
+	path := ASSETS_DIR + "example.txt"
+	want := 29
+
+	if result := solveSecondPart(path); result != want {
+		t.Fatalf(`Day 12-02 test returned %d, got %d instead`, want, result)
+	}
+}
