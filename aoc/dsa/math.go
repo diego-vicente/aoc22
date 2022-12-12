@@ -1,5 +1,14 @@
 package dsa
 
+// Get the absolute value of an integer
+func Abs(n int) int {
+	if n < 0 {
+		return -n
+	} else {
+		return n
+	}
+}
+
 // Compute the Greatest Common Divisor (GCD) via Euclidean algorithm
 func GCD(a, b int) int {
 	for b != 0 {
