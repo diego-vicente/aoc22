@@ -5,22 +5,25 @@ import (
 	"os"
 )
 
+// A point is represented by 2D coordinates
 type Point struct {
 	X int
 	Y int
 }
 
+// A hill map has a start, end, and a point mapping to their heights
 type HillMap struct {
 	Start  Point
 	End    Point
 	Height map[Point]int
 }
 
+// Translate char-represented heights to integers
 func charToHeight(char rune) int {
 	return int(char) - 97
 }
 
-// Parse the input as a list of Monkeys
+// Parse the input as a HillMap
 func readInput(path string) HillMap {
 	var start, end Point
 	height := map[Point]int{}
