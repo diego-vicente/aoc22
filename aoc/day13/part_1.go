@@ -78,7 +78,7 @@ func (p1 ListPacket) Compare(p2 Packet) Comparison {
 
 // Solve the first part by counting the indices of sorted pairs
 func solveFirstPart(path string) int {
-	input := readInput(path)
+	input := readFirstPartInput(path)
 
 	result := 0
 	for i, pair := range input {

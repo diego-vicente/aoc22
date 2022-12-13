@@ -73,8 +73,8 @@ func parsePacket(line string, ptr int) (Packet, int) {
 	panic("Error, imabalanced brackets")
 }
 
-// Read the input as a list of PacketPairs
-func readInput(path string) []PacketPair {
+// Read the first part input as a list of PacketPairs
+func readFirstPartInput(path string) []PacketPair {
 	var input []PacketPair
 	var current []Packet
 
@@ -106,6 +106,31 @@ func readInput(path string) []PacketPair {
 			First:  current[0],
 			Second: current[1],
 		})
+	}
+
+	return input
+}
+
+// Read the second part input as a list of Packets
+func readSecondPartInput(path string) []Packet {
+	var input []Packet
+
+	file, err := os.Open(path)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		if line == "" {
+			continue
+		} else {
+			packet, _ := parsePacket(line, 1)
+			input = append(input, packet)
+		}
 	}
 
 	return input
