@@ -67,7 +67,7 @@ func (cave *Cave) dropSand(origin Point) int {
 
 // Display the Cave on a given range of X
 func (cave Cave) Display(fromX, toX int) {
-	for y := 0; y <= cave.Depth; y++ {
+	for y := 0; y <= cave.Depth+2; y++ {
 		for x := fromX; x <= toX; x++ {
 			p := Point{x, y}
 			if cave.isEmtpy(p) {
@@ -81,6 +81,7 @@ func (cave Cave) Display(fromX, toX int) {
 	fmt.Println()
 }
 
+// Solve the first part by dropping sand until it falls through
 func solveFirstPart(path string) int {
 	cave := readInput(path)
 	return cave.dropSand(Point{500, 0})
