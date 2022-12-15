@@ -4,22 +4,22 @@ import (
 	"github.com/diego-vicente/aoc22/aoc/dsa"
 )
 
-// A Range2D is defined by its start and end
-type Range2D struct {
+// A Range1D is defined by its start and end
+type Range1D struct {
 	Start int
 	End   int
 }
 
-// An IndexRange is, indeed, two-dimensional
-type IndexRange = Range2D
+// An IndexRange is, indeed, one-dimensional
+type IndexRange = Range1D
 
 // The size of a range is teh difference between its Start and End
-func (r Range2D) Size() int {
+func (r Range1D) Size() int {
 	return dsa.Abs(r.End - r.Start)
 }
 
-// Two Range2D overalp if the former's End is larger than the latter's start
-func (r1 Range2D) Overlaps(r2 Range2D) bool {
+// Two Range1D overalp if the former's End is larger than the latter's start
+func (r1 Range1D) Overlaps(r2 Range1D) bool {
 	if r1.Start < r2.Start {
 		return r1.End >= r2.Start
 	} else {
@@ -27,13 +27,13 @@ func (r1 Range2D) Overlaps(r2 Range2D) bool {
 	}
 }
 
-// A MultiRange2D is a set of ranges that have gaps in the middle
-type MultiRange2D struct {
-	Segments []Range2D
+// A MultiRange1D is a set of ranges that have gaps in the middle
+type MultiRange1D struct {
+	Segments []Range1D
 }
 
-// The size of a MultiRange2D is the sum of its segments
-func (mr MultiRange2D) Size() int {
+// The size of a MultiRange1D is the sum of its segments
+func (mr MultiRange1D) Size() int {
 	size := 0
 
 	for _, segment := range mr.Segments {
@@ -44,8 +44,8 @@ func (mr MultiRange2D) Size() int {
 }
 
 // Return all segment values and indices that overlap a second different segment
-func (mr MultiRange2D) Overlapping(other Range2D) (IndexRange, []Range2D) {
-	overlaps := []Range2D{}
+func (mr MultiRange1D) Overlapping(other Range1D) (IndexRange, []Range1D) {
+	overlaps := []Range1D{}
 	indices := IndexRange{-1, -1}
 
 	for i, segment := range mr.Segments {
@@ -67,8 +67,8 @@ func (mr MultiRange2D) Overlapping(other Range2D) (IndexRange, []Range2D) {
 }
 
 // Change a set of given segments by a new, consolidated one
-func (mr *MultiRange2D) Override(newRange Range2D, dropIndices IndexRange) {
-	tail := make([]Range2D, len(mr.Segments)-(dropIndices.End+1))
+func (mr *MultiRange1D) Override(newRange Range1D, dropIndices IndexRange) {
+	tail := make([]Range1D, len(mr.Segments)-(dropIndices.End+1))
 	copy(tail, mr.Segments[dropIndices.End+1:])
 
 	mr.Segments = append(mr.Segments[:dropIndices.Start], newRange)
@@ -76,10 +76,10 @@ func (mr *MultiRange2D) Override(newRange Range2D, dropIndices IndexRange) {
 }
 
 // Add a new 2DRange to an existing MultiRange2D and consolidate its segments
-func (mr *MultiRange2D) Add(simple Range2D) {
+func (mr *MultiRange1D) Add(simple Range1D) {
 	// If there are no segments, just add it
 	if len(mr.Segments) == 0 {
-		mr.Segments = []Range2D{simple}
+		mr.Segments = []Range1D{simple}
 		return
 	}
 
@@ -123,17 +123,17 @@ func manhattanDistance(p1, p2 Point) int {
 }
 
 // Compute the known knownCoverage of a sensor-beacon pair for a given row
-func knownCoverage(sensor Sensor, beacon Beacon, y int) (Range2D, bool) {
+func knownCoverage(sensor Sensor, beacon Beacon, y int) (Range1D, bool) {
 	distance := manhattanDistance(sensor.Position, beacon.Position)
 	slack := distance - dsa.Abs(y-sensor.Position.Y)
 
 	// Return that this pair does not cover such row
 	if slack < 0 {
-		return Range2D{0, 0}, false
+		return Range1D{0, 0}, false
 	}
 
 	// Return the correct coverage range for the row
-	coverage := Range2D{
+	coverage := Range1D{
 		sensor.Position.X - slack,
 		sensor.Position.X + slack,
 	}
@@ -142,8 +142,8 @@ func knownCoverage(sensor Sensor, beacon Beacon, y int) (Range2D, bool) {
 }
 
 // Compute the known coverage for all sensor-beacon pairs
-func coverageOnRow(input map[Sensor]Beacon, y int) int {
-	totalCoverage := MultiRange2D{[]Range2D{}}
+func coverageOnRow(input map[Sensor]Beacon, y int) MultiRange1D {
+	totalCoverage := MultiRange1D{[]Range1D{}}
 
 	for sensor, beacon := range input {
 		sensorCoverage, ok := knownCoverage(sensor, beacon, y)
@@ -152,11 +152,11 @@ func coverageOnRow(input map[Sensor]Beacon, y int) int {
 		}
 	}
 
-	return totalCoverage.Size()
+	return totalCoverage
 }
 
 // Solve the first pair by computing coverage for row 2000000
 func solveFirstPart(path string) int {
 	input := readInput(path)
-	return coverageOnRow(input, 2000000)
+	return coverageOnRow(input, 2000000).Size()
 }
