@@ -17,6 +17,18 @@ type Point struct {
 	Z int
 }
 
+// A Bounding Box represents the minimum and maximum points of a shape
+type BoundingBox struct {
+	Min Point
+	Max Point
+}
+
+// A Droplet is their set of lava points and a bounding box
+type Droplet struct {
+	Points dsa.Set[Point]
+	Bounds BoundingBox
+}
+
 // Parse a single line of the input into a Point
 func parsePoint(line string) Point {
 	values := strings.Split(line, ",")
@@ -39,8 +51,8 @@ func parsePoint(line string) Point {
 	return Point{x, y, z}
 }
 
-// Read the inputa as a set of 3D points
-func readInput(path string) dsa.Set[Point] {
+// Read the input as a lava droplet
+func readInput(path string) Droplet {
 	input := dsa.NewSet[Point]()
 
 	file, err := os.Open(path)
@@ -55,5 +67,10 @@ func readInput(path string) dsa.Set[Point] {
 		input.Add(parsePoint(line))
 	}
 
-	return input
+	result := Droplet{
+		Points: input,
+		Bounds: ComputeBoundingBox(input),
+	}
+
+	return result
 }

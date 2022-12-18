@@ -1,8 +1,6 @@
 package day18
 
-import (
-	"github.com/diego-vicente/aoc22/aoc/dsa"
-)
+import "github.com/diego-vicente/aoc22/aoc/dsa"
 
 // Get all neighbors of a Point
 func (p Point) Neighbors() []Point {
@@ -30,11 +28,11 @@ func (p Point) Neighbors() []Point {
 }
 
 // Count how many sides of a Point are not adjacent to another
-func countExposedSides(all dsa.Set[Point], p Point) int {
+func countExposedSides(points dsa.Set[Point], p Point) int {
 	exposed := 0
 
 	for _, neighbor := range p.Neighbors() {
-		if !all.Contains(neighbor) {
+		if !points.Contains(neighbor) {
 			exposed++
 		}
 	}
@@ -42,11 +40,11 @@ func countExposedSides(all dsa.Set[Point], p Point) int {
 	return exposed
 }
 
-// Count all the exposed sides of the Points in a droplet
-func ApproximateSurface(droplet dsa.Set[Point]) int {
+// Count all the exposed sides of a set of points
+func ApproximateSurface(points dsa.Set[Point]) int {
 	surface := 0
-	for _, point := range droplet.Values() {
-		surface += countExposedSides(droplet, point)
+	for _, point := range points.Values() {
+		surface += countExposedSides(points, point)
 	}
 	return surface
 }
@@ -54,5 +52,5 @@ func ApproximateSurface(droplet dsa.Set[Point]) int {
 // Solve the first part by approximating the surface
 func solveFirstPart(path string) int {
 	input := readInput(path)
-	return ApproximateSurface(input)
+	return ApproximateSurface(input.Points)
 }
