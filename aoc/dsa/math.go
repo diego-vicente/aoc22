@@ -28,3 +28,12 @@ func LCM(a, b int, args ...int) int {
 
 	return result
 }
+
+// Compute the modulo as a positive integer always
+func Mod(n, m int) int {
+	if mod := n % m; mod < 0 {
+		return mod + m
+	} else {
+		return mod
+	}
+}
