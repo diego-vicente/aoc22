@@ -66,8 +66,10 @@ func (ring *Ring[T]) pop(idx int) *Node[T] {
 
 	if ring.start == node {
 		ring.start = node.Next
+		ring.start.Prev = nil
 	} else if ring.end == node {
 		ring.end = node.Prev
+		ring.end.Next = nil
 	} else {
 		prev := node.Prev
 		next := node.Next
@@ -81,25 +83,6 @@ func (ring *Ring[T]) pop(idx int) *Node[T] {
 
 	ring.Size--
 	return node
-}
-
-// Insert a node before a given index
-func (ring *Ring[T]) insertBefore(node, next *Node[T]) {
-	if next == ring.start {
-		ring.start = node
-		node.Next = next
-		next.Prev = node
-	} else {
-		prev := next.Prev
-
-		node.Next = next
-		node.Prev = prev
-
-		next.Prev = node
-		prev.Next = node
-	}
-
-	ring.Size++
 }
 
 // Insert an node just after a given index
