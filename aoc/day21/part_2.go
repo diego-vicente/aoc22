@@ -4,47 +4,47 @@ import (
 	"fmt"
 )
 
-// Solve an incognita with as a given equality
+// Solve an unknown with as a given equality
 //
-// The incognita is an Operable expression that contains a single undefined
+// The unknown is an Operable expression that contains a single undefined
 // value somewhere down the tree. This function contains the logic to
 // recursively unroll these symbolic trees to isolate the undefined value.
-func solveIncognita(incognita Operable, expected int) int {
-	if operation, ok := incognita.(Operation); ok {
+func solveUnknown(unknown Operable, expected int) int {
+	if operation, ok := unknown.(Operation); ok {
 		lhs, rhs := operation.Lhs, operation.Rhs
 
 		switch operation.Operator {
 		case Sum:
 			if lhs.IsDefined() {
 				// m + x = n --> x = n - m
-				return solveIncognita(rhs, expected-lhs.Compute())
+				return solveUnknown(rhs, expected-lhs.Compute())
 			} else {
 				// x + m = n --> x = n - m
-				return solveIncognita(lhs, expected-rhs.Compute())
+				return solveUnknown(lhs, expected-rhs.Compute())
 			}
 		case Multiply:
 			if lhs.IsDefined() {
 				// x * m = n --> x = n / m
-				return solveIncognita(rhs, expected/lhs.Compute())
+				return solveUnknown(rhs, expected/lhs.Compute())
 			} else {
 				// m * x = n --> x = n / m
-				return solveIncognita(lhs, expected/rhs.Compute())
+				return solveUnknown(lhs, expected/rhs.Compute())
 			}
 		case Divide:
 			if lhs.IsDefined() {
 				// m / x = n --> x = m / n
-				return solveIncognita(rhs, lhs.Compute()/expected)
+				return solveUnknown(rhs, lhs.Compute()/expected)
 			} else {
 				// x / m = n --> x = n * m
-				return solveIncognita(lhs, expected*rhs.Compute())
+				return solveUnknown(lhs, expected*rhs.Compute())
 			}
 		case Substract:
 			if lhs.IsDefined() {
 				// m - x = n --> x = m - n
-				return solveIncognita(rhs, lhs.Compute()-expected)
+				return solveUnknown(rhs, lhs.Compute()-expected)
 			} else {
 				// x - m = n --> x = n + m
-				return solveIncognita(lhs, expected+rhs.Compute())
+				return solveUnknown(lhs, expected+rhs.Compute())
 			}
 		default:
 			panic(fmt.Sprintf("Unknown operator: %s", operation.Operator))
@@ -65,10 +65,10 @@ func solveSecondPart(path string) int {
 	symbolic := input.Rel["root"].getSymbolic().(Operation)
 
 	// Present the equality and solve it recursively
-	known, incognita := symbolic.Lhs, symbolic.Rhs
+	known, unknown := symbolic.Lhs, symbolic.Rhs
 	if !known.IsDefined() {
-		known, incognita = incognita, known
+		known, unknown = unknown, known
 	}
 
-	return solveIncognita(incognita, known.Compute())
+	return solveUnknown(unknown, known.Compute())
 }
