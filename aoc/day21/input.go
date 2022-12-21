@@ -11,6 +11,7 @@ import (
 // A type is Operable if it can yield a value somehow
 type Operable interface {
 	Compute() int
+	IsDefined() bool
 }
 
 // A result holds a value
@@ -18,14 +19,17 @@ type Result struct {
 	Value int
 }
 
-func (r Result) Compute() int { return r.Value }
+func (r Result) Compute() int  { return r.Value }
+func (Result) IsDefined() bool { return true }
 
-// A literal is a given value from the statement
+// A literal is a given value from the statement or a explicit incognita
 type Literal struct {
-	Value int
+	Value   int
+	Defined bool
 }
 
-func (l Literal) Compute() int { return l.Value }
+func (l Literal) Compute() int    { return l.Value }
+func (l Literal) IsDefined() bool { return l.Defined }
 
 // An Operator is represented by a string
 type Operator = string
@@ -59,6 +63,11 @@ func (op Operation) Compute() int {
 	}
 }
 
+// An operation is defined if both sides are defined
+func (op Operation) IsDefined() bool {
+	return op.Lhs.IsDefined() && op.Rhs.IsDefined()
+}
+
 // A Monkey has an Id and an Operation
 type Monkey struct {
 	Id        string
@@ -86,7 +95,7 @@ func parseMonkey(line string) Monkey {
 		return Monkey{
 			Id:        sides[0],
 			Operation: sides[1],
-			Literal:   &Literal{x},
+			Literal:   &Literal{x, true},
 		}
 	}
 }
