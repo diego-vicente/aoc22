@@ -1,43 +1,29 @@
 package day21
 
 import (
-	"fmt"
 	"strings"
 )
 
 // Compute the value of the Operation held by a Monkey
 func (m *Monkey) Compute() int {
-	tokens := strings.Split(m.Operation, " ")
+	var operation Operable
 
-	lhs := m.Pack.Rel[tokens[0]].Infer()
-	rhs := m.Pack.Rel[tokens[2]].Infer()
-
-	switch tokens[1] {
-	case "+":
-		return lhs + rhs
-	case "-":
-		return lhs - rhs
-	case "/":
-		return lhs / rhs
-	case "*":
-		return lhs * rhs
-	default:
-		panic(fmt.Sprintf("Unknown operator: %s", m.Operation))
-	}
-}
-
-// Infer the value associated to a monkey
-func (m *Monkey) Infer() int {
-	// If there is no known result, compute the operation
-	if m.Result == nil {
-		m.Result = &Maybe[int]{m.Compute()}
+	if m.Literal != nil {
+		operation = m.Literal
+	} else {
+		tokens := strings.Split(m.Operation, " ")
+		operation = Operation{
+			Lhs:      m.Pack.Rel[tokens[0]],
+			Rhs:      m.Pack.Rel[tokens[2]],
+			Operator: tokens[1],
+		}
 	}
 
-	return m.Result.Value
+	return operation.Compute()
 }
 
 // Solve the first part by infering the value of root
 func solveFirstPart(path string) int {
 	input := readInput(path)
-	return input.Rel["root"].Infer()
+	return input.Rel["root"].Compute()
 }

@@ -2,21 +2,68 @@ package day21
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
 )
 
-// A Maybe type holds a value and allows to make it a nil value
-type Maybe[T any] struct {
-	Value T
+// A type is Operable if it can yield a value somehow
+type Operable interface {
+	Compute() int
+}
+
+// A result holds a value
+type Result struct {
+	Value int
+}
+
+func (r Result) Compute() int { return r.Value }
+
+// A literal is a given value from the statement
+type Literal struct {
+	Value int
+}
+
+func (l Literal) Compute() int { return l.Value }
+
+// An Operator is represented by a string
+type Operator = string
+
+const (
+	Sum       Operator = "+"
+	Substract Operator = "-"
+	Multiply  Operator = "*"
+	Divide    Operator = "/"
+)
+
+// An operation is formed by two Operables and an Operator
+type Operation struct {
+	Lhs      Operable
+	Rhs      Operable
+	Operator Operator
+}
+
+func (op Operation) Compute() int {
+	switch op.Operator {
+	case Sum:
+		return op.Lhs.Compute() + op.Rhs.Compute()
+	case Substract:
+		return op.Lhs.Compute() - op.Rhs.Compute()
+	case Multiply:
+		return op.Lhs.Compute() * op.Rhs.Compute()
+	case Divide:
+		return op.Lhs.Compute() / op.Rhs.Compute()
+	default:
+		panic(fmt.Sprintf("Unknown operator: %s", op.Operator))
+	}
 }
 
 // A Monkey has an Id and an Operation
 type Monkey struct {
 	Id        string
 	Operation string
-	Result    *Maybe[int]
+	Literal   *Literal
 	Pack      *MonkeyPack
 }
 
@@ -33,13 +80,13 @@ func parseMonkey(line string) Monkey {
 		return Monkey{
 			Id:        sides[0],
 			Operation: sides[1],
-			Result:    nil,
+			Literal:   nil,
 		}
 	} else {
 		return Monkey{
 			Id:        sides[0],
 			Operation: sides[1],
-			Result:    &Maybe[int]{x},
+			Literal:   &Literal{x},
 		}
 	}
 }
