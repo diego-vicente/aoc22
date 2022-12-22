@@ -18,6 +18,22 @@ type Agent struct {
 	Orientation Direction
 }
 
+// Create a new agent in the starting point
+func NewAgent(jungle Jungle) Agent {
+	// Infer the starting position
+	originX := math.MaxInt
+	for point := range jungle.Map {
+		if point.Y == 0 && point.X < originX {
+			originX = point.X
+		}
+	}
+
+	return Agent{
+		Position:    Point{originX, 0},
+		Orientation: East,
+	}
+}
+
 // Turn the orientation of an agent in a given direction
 func (a *Agent) Turn(d Direction) {
 	a.Orientation = dsa.Mod(a.Orientation+d, 4)
@@ -110,19 +126,7 @@ func (a *Agent) GetPassword() int {
 // Solve the first part by running the instructions
 func solveFirstPart(path string) int {
 	jungle, instructions := readInput(path)
-
-	// Infer the starting position
-	originX := math.MaxInt
-	for point := range jungle.Map {
-		if point.Y == 0 && point.X < originX {
-			originX = point.X
-		}
-	}
-
-	agent := Agent{
-		Position:    Point{originX, 0},
-		Orientation: East,
-	}
+	agent := NewAgent(jungle)
 
 	// Run the instructions
 	for _, instruction := range instructions {

@@ -3,6 +3,7 @@ package day22
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 )
@@ -42,7 +43,8 @@ const (
 
 // A Jungle contains a map of points to their contents
 type Jungle struct {
-	Map map[Point]Terrain
+	Map  map[Point]Terrain
+	Side int
 }
 
 // An instruction has an amount of steps to take or turn to make
@@ -124,8 +126,13 @@ func readInput(path string) (Jungle, []Instruction) {
 		}
 	}
 
+	jungle := Jungle{
+		Map:  jungleMap,
+		Side: int(math.Sqrt(float64(len(jungleMap)) / 6)),
+	}
+
 	scanner.Scan()
 	instructions := parseInstructions(scanner.Text())
 
-	return Jungle{jungleMap}, instructions
+	return jungle, instructions
 }
