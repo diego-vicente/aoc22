@@ -111,15 +111,21 @@ func (elf *Elf) Move(grove *Grove, target Point) {
 }
 
 // Run a given round of the elves algorithm
-func (g *Grove) RunRound(round int) {
+//
+// Returns true if the algorithm has converged; that is, no elf made a move in
+// this last round executed.
+func (g *Grove) RunRound(round int) bool {
 	candidates := getCheckOrder(round)
 	proposals := Proposals{}
+	stable := true
 
 	// Ask each of the elves for a proposed position
 	for _, elf := range g.Elves {
 		// If there is no one around, the elf does not move
 		if elf.CanStay(*g) {
 			continue
+		} else {
+			stable = false
 		}
 
 		// Otherwise, try to propose a direction
@@ -137,6 +143,8 @@ func (g *Grove) RunRound(round int) {
 			elves[0].Move(g, position)
 		}
 	}
+
+	return stable
 }
 
 // Compute the bounding box of the current Grove disposition
